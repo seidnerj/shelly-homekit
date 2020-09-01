@@ -33,7 +33,6 @@ class OutputPowerMeter {
 
 class MeteredOutput : public Output, OutputPowerMeter {
  public:
-
 };
 
 class OutputPin : public Output {
