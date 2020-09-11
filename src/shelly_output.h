@@ -27,12 +27,6 @@ class Output {
   virtual Status SetState(bool on, const char *source) = 0;
 };
 
-class PowerMeter {
- public:
-  virtual StatusOr<float> GetPowerW() = 0;
-  virtual StatusOr<float> GetEnergyWH() = 0;
-};
-
 class OutputPin : public Output {
  public:
   OutputPin(int id, int pin, int on_value, bool initial_state);
