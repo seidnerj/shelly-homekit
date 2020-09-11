@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+#pragma once
+
 #include "shelly_common.h"
 
 namespace shelly {
@@ -33,7 +35,7 @@ class PowerMeter {
 
 class OutputPin : public Output {
  public:
-  OutputPin(int id, int pin, bool on_value, bool initial_state);
+  OutputPin(int id, int pin, int on_value, bool initial_state);
   virtual ~OutputPin();
 
   // Output interface impl.
@@ -43,7 +45,7 @@ class OutputPin : public Output {
  private:
   const int id_;
   const int pin_;
-  const bool on_value_;
+  const int on_value_;
 
   OutputPin(const OutputPin &other) = delete;
 };
