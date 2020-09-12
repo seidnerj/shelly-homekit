@@ -26,4 +26,6 @@ namespace shelly {
 
 extern std::vector<std::unique_ptr<Component>> g_components;
 
+void RestartHAPServer();
+
 }  // namespace shelly
