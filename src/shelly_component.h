@@ -25,6 +25,8 @@ class Component {
  public:
   enum class Type {
     kSwitch = 0,
+    kOutlet = 1,
+    kLock = 2,
   };
 
   explicit Component(int id);

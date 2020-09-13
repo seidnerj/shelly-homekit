@@ -30,94 +30,26 @@
 #include "shelly_input.h"
 #include "shelly_output.h"
 #include "shelly_pm.h"
+#include "shelly_switch.h"
 
 namespace shelly {
 
-class HAPSwitch : public Component, Service {
+class ShellyHAPSwitch : public ShellySwitch {
  public:
-  enum class ServiceType {
-    kDisabled = -1,
-    kSwitch = 0,
-    kOutlet = 1,
-    kLock = 2,
-  };
+  ShellyHAPSwitch(int id, Input *in, Output *out, PowerMeter *out_pm,
+                  struct mgos_config_sw *cfg, HAPAccessoryServerRef *server,
+                  const HAPAccessory *accessory);
+  virtual ~ShellyHAPSwitch();
 
-  enum class InMode {
-    kMomentary = 0,
-    kToggle = 1,
-    kEdge = 2,
-    kDetached = 3,
-  };
-
-  enum class InitialState {
-    kOff = 0,
-    kOn = 1,
-    kLast = 2,
-    kInput = 3,
-  };
-
-  HAPSwitch(int id, Input *in, Output *out, PowerMeter *out_pm,
-            struct mgos_config_sw *cfg, HAPAccessoryServerRef *server,
-            const HAPAccessory *accessory);
-  virtual ~HAPSwitch();
-
-  // Component interface impl.
-  Type type() const override {
-    return Type::kSwitch;
-  }
-  StatusOr<std::string> GetInfo() const override;
-  Status SetConfig(const std::string &config_json,
-                   bool *restart_required) override;
-
-  // HAP Service interface impl.
-  const HAPService *GetHAPService() const override;
-
-  Status Init() override;
-
-  void SetState(bool new_state, const char *source);
+  Status Init();
 
  private:
-  void InputEventHandler(Input::Event ev, bool state);
-
-  void SetStateInternal(bool new_state, const char *source, bool is_auto_off);
-
-  static void AutoOffTimerCB(void *ctx);
-
-  void SaveState();
-
   HAPError HandleOnRead(HAPAccessoryServerRef *server,
                         const HAPBoolCharacteristicReadRequest *request,
                         bool *value);
   HAPError HandleOnWrite(HAPAccessoryServerRef *server,
                          const HAPBoolCharacteristicWriteRequest *request,
                          bool value);
-  HAPError HandleOutletInUseRead(
-      HAPAccessoryServerRef *server,
-      const HAPBoolCharacteristicReadRequest *request, bool *value);
-  HAPError HandleLockCurrentStateRead(
-      HAPAccessoryServerRef *server,
-      const HAPUInt8CharacteristicReadRequest *request, uint8_t *value);
-  HAPError HandleLockTargetStateWrite(
-      HAPAccessoryServerRef *server,
-      const HAPUInt8CharacteristicWriteRequest *request, uint8_t value);
-
-  Input *const in_;
-  Output *const out_;
-  PowerMeter *const out_pm_;
-  struct mgos_config_sw *cfg_;
-  HAPAccessoryServerRef *const server_;
-  const HAPAccessory *const accessory_;
-
-  HAPService svc_;
-  Input::HandlerID handler_id_ = Input::kInvalidHandlerID;
-  HAPCharacteristic *state_notify_char_ = nullptr;
-  HAPCharacteristic *tgt_state_notify_char_ = nullptr;
-  std::vector<std::unique_ptr<ShellyHAPCharacteristic>> chars_;
-  std::vector<HAPCharacteristic *> hap_chars_;
-
-  mgos_timer_id auto_off_timer_id_ = MGOS_INVALID_TIMER_ID;
-
-  HAPSwitch(const HAPSwitch &other) = delete;
 };
 
 }  // namespace shelly
