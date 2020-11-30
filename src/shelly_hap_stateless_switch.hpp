@@ -43,13 +43,13 @@ class StatelessSwitch : public Component, public Service {
     kToggleShortLong = 2,
   };
 
-  StatelessSwitch(int id, Input *in, struct mgos_config_ssw *cfg,
-                  const uint16_t label_service_iid = 0);
+  StatelessSwitch(int id, Input *in, struct mgos_config_in_ssw *cfg);
   virtual ~StatelessSwitch();
 
   // Component interface impl.
-  Type type() const override;
   Status Init() override;
+  Type type() const override;
+  std::string name() const override;
   StatusOr<std::string> GetInfo() const override;
   StatusOr<std::string> GetInfoJSON() const override;
   Status SetConfig(const std::string &config_json,
@@ -61,7 +61,7 @@ class StatelessSwitch : public Component, public Service {
   void RaiseEvent(uint8_t ev);
 
   Input *const in_;
-  struct mgos_config_ssw *cfg_;
+  struct mgos_config_in_ssw *cfg_;
 
   Input::HandlerID handler_id_ = Input::kInvalidHandlerID;
 
