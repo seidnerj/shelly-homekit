@@ -26,18 +26,19 @@ namespace shelly {
 
 class PowerMeter {
  public:
-  PowerMeter() {
-  }
-  virtual ~PowerMeter() {
-  }
-  virtual int id() const = 0;
+  explicit PowerMeter(int id);
+  virtual ~PowerMeter();
+
+  int id() const;
+
+  virtual Status Init() = 0;
   virtual StatusOr<float> GetPowerW() = 0;
   virtual StatusOr<float> GetEnergyWH() = 0;
 
  private:
+  const int id_;
+
   PowerMeter(const PowerMeter &other) = delete;
 };
-
-Status PowerMeterInit(std::vector<std::unique_ptr<PowerMeter>> *pms);
 
 }  // namespace shelly
