@@ -24,7 +24,7 @@
 namespace shelly {
 namespace hap {
 
-TemperatureSensor::TemperatureSensor(int id, TempSensor* sensor,
+TemperatureSensor::TemperatureSensor(int id, TempSensor *sensor,
                                      struct mgos_config_ts *cfg)
     : Component(id),
       Service(SHELLY_HAP_IID_BASE_TEMPERATURE_SENSOR +
